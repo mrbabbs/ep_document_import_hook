@@ -1,0 +1,16 @@
+{
+    "parts": [
+        {
+            "hooks": {
+                "expressCreateServer": "ep_import_file_libreoffice/hooks"
+            },
+            "name": "import_file_libreoffice",
+            "post": [
+                "html_export_using_client_filters"
+            ],
+            "pre": [
+                "ep_etherpad-lite/webaccess"
+            ]
+        }
+    ]
+}

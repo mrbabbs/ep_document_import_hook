@@ -1,0 +1,24 @@
+{
+  "name": "ep_import_file_libreoffice",
+  "version": "0.0.1",
+  "description": "The plugins allow an user to import DOC, PDF, ODT file using Libreoffice functionality",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "import",
+    "file",
+    "libreoffice",
+    "pdf",
+    "odt",
+    "doc",
+    "docx"
+  ],
+  "engines": "*",
+  "os": [
+  	"linux"
+  ],
+  "author": "mrbabbs",
+  "license": "ISC"
+}

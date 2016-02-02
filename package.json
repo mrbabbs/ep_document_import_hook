@@ -1,11 +1,7 @@
 {
-  "name": "ep_import_file_libreoffice",
+  "name": "ep_document_import_hook",
   "version": "0.0.1",
   "description": "The plugins allow an user to import DOC, PDF, ODT file using Libreoffice functionality",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "keywords": [
     "import",
     "file",
@@ -17,7 +13,7 @@
   ],
   "engines": "*",
   "os": [
-  	"linux"
+    "linux"
   ],
   "author": "mrbabbs",
   "license": "ISC"

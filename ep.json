@@ -1,7 +1,8 @@
 {
   "parts": [{
     "hooks": {
-      "import": "ep_document_import_hook/hooks/import"
+      "import": "ep_document_import_hook/hooks/import",
+      "eejsBlock_importColumn": "ep_document_import_hook/hooks/message"
     },
     "name": "document_import_hook"
   }]

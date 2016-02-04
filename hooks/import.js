@@ -13,16 +13,21 @@ exports.import = function (hook_nams, args, cb) {
     var apiLogger = log4js.getLogger('import (hook)');
     var fileExt = path.extname(args.srcFile).toLowerCase();
     var cmd = 'soffice';
-    var confs = settings.ep_import_file_libreoffice;
+    var confs = settings.ep_document_import_hook;
 
     apiLogger.debug('Document Import Hook');
     apiLogger.debug('src: ', args.srcFile);
     apiLogger.debug('dest: ',  args.destFile);
 
     try {
+        if(!confs) {
+          apiLogger.debug('No settings');
+          return cb([]);
+        }
+
         if (confs != null
-                && confs.soffice) {
-            cmd = confs.soffice;
+                && confs.tool) {
+            cmd = confs.tool;
         }
         apiLogger.debug('Lib cmd : ' + cmd);
         /**
@@ -33,7 +38,7 @@ exports.import = function (hook_nams, args, cb) {
          * check again the other file format
          **/
         if (fileExt === '.html' ||
-                fileExt === ',txt') {
+                fileExt === '.txt') {
 
             apiLogger.debug('File has a basic extension[txt, html]: ' +
                         fileExt);

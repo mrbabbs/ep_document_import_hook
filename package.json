@@ -1,7 +1,7 @@
 {
   "name": "ep_document_import_hook",
   "version": "0.0.1",
-  "description": "The plugins allow an user to import DOC, PDF, ODT file using Libreoffice functionality",
+  "description": "The plugins allow an user to import DOC, PDF, ODT, and DOCX file using external tools like LibreOffice",
   "keywords": [
     "import",
     "file",
@@ -9,12 +9,27 @@
     "pdf",
     "odt",
     "doc",
-    "docx"
+    "docx",
+    "soffice",
+    "etherpad-lite"
   ],
-  "engines": "*",
+  "engines": {
+    "node": "*"
+  },
   "os": [
     "linux"
   ],
-  "author": "mrbabbs",
-  "license": "ISC"
+  "_id": "ep_document_import_hook@0.0.1",
+  "author": "mrbabbs (Giovanni Esposito) gioesps@gmail.com",
+  "repository": {
+    "type": "git",
+    "url": "",
+  },
+  "dependencies": {
+    "regexp-quote" : "*",
+    "log4js" : ">= 0.5.x"
+  },
+  "peerDependencies": "ep_etherpad_lite": ">=1.5.7",
+  "license": "MIT",
+  "_from": "ep_document_import_hook@*"
 }

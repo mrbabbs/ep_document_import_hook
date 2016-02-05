@@ -1,0 +1,6 @@
+*.*~
+*.swp
+.ep_initialized
+npm-debug.log
+
+/node_modules

@@ -23,7 +23,7 @@
   "author": "mrbabbs (Giovanni Esposito) gioesps@gmail.com",
   "repository": {
     "type": "git",
-    "url": "",
+    "url": "https://github.com/mrbabbs/ep_document_import_hook.git",
   },
   "bugs": "https://github.com/mrbabbs/ep_document_import_hook/issues",
   "license": "MIT",

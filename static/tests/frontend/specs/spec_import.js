@@ -17,22 +17,24 @@ describe('Document Import Hook', function () {
         return newtext
     }
 
-    function importRequest(data, importUrl, type, response) {
+    function importRequest(data, importUrl, cType, type, response) {
         var success;
         var error;
+        var formD = new FormData();
+        formD.append('filename', 'import.' + type);
+        formD.append('file',
+                new Blob([data], {type: cType}),
+                'import.' + type);
         var result = $.ajax({
             url: importUrl,
             type: "post",
             processData: false,
             async: false,
-            contentType: 'multipart/form-data; boundary=boundary',
+            contentType: false,
             accepts: {
                 text: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
             },
-            data: 'Content-Type: multipart/form-data; boundary=--boundary' +
-                '\r\n\r\n--boundary\r\nContent-Disposition: form-data; ' +
-                'name="file"; filename="import.'+type+'"\r\n' +
-                'Content-Type: text/plain\r\n\r\n' + data + '\r\n\r\n--boundary',
+            data: formD,
             error: function (res){
                 error = res;
             },
@@ -42,24 +44,18 @@ describe('Document Import Hook', function () {
         return result;
     }
 
-    function exportfunc(link){
-        var exportresults = []
-        $.ajaxSetup({
-            async:false
-        });
-
-        $.get(link+"/export/html",function(data){
-            var start = data.indexOf("<body>")
-            var end = data.indexOf("</body>")
-            var html = data.substr(start+6,end-start-6)
-            exportresults.push(["html",html])
-        });
-
-        $.get(link+"/export/txt",function(data){
-            exportresults.push(["txt",data])
-        });
-
-        return exportresults;
+    function readDoc(url, cb) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.open('GET', url, true);
+        rawFile.responseType = 'arraybuffer';
+        rawFile.setRequestHeader('Content-type', 'text/plain; charset=utf-8');
+        rawFile.onload = function(e) {
+            if (this.status == 200) {
+                var uInt8Array = new Uint8Array(this.response);
+                cb(this.response);
+            };
+                                                  };
+        rawFile.send(null);
     }
 
     it('import simple txt', function (done) {
@@ -68,9 +64,11 @@ describe('Document Import Hook', function () {
         var firstLine = 'imported simple text';
         var lastLine = 'Done with success';
         var response;
-        var result = importRequest(firstLine +
+        var simpleText = firstLine +
             '\n' +
-            lastLine, importUrl, 'txt', function (res) {
+            lastLine;
+        var result = importRequest(simpleText, importUrl,
+            'text/plain', 'txt', function (res) {
             response = res;
         });
 
@@ -81,7 +79,7 @@ describe('Document Import Hook', function () {
                 expect(
                     innerTextPad.indexOf(lastLine)).not.to.be(-1);
             return test;
-        }, 2000).done(done);
+        }).done(done);
     });
 
     it('import simple html', function (done) {
@@ -90,7 +88,7 @@ describe('Document Import Hook', function () {
         var simpleHtml = '<html><head><title>Simple HTML</title></head>' +
             '<body>imported simple html<br>Done with success</body></html>';
         var response;
-        var result = importRequest(simpleHtml, importUrl, 'html', 
+        var result = importRequest(simpleHtml, importUrl, 'text/plain', 'html',
             function (res) {
                 response = res;
             });
@@ -104,7 +102,134 @@ describe('Document Import Hook', function () {
                         'Done with success</span')).not.to.be(-1);
 
             return test;
-        }, 2000).done(done);
+        }).done(done);
+    });
+
+    it('import simple pdf', function (done) {
+        var importUrl = helper.padChrome$.window.location.href +
+            '/import';
+        var protocol = helper.padChrome$.window.location.protocol;
+        var docUrl = protocol +
+            '//' +
+            helper.padChrome$.window.location.host +
+            '/static/plugins/ep_document_import_hook/static/tests/frontend/doc_test/doc_test.pdf';
+        var result;
+        var response;
+        readDoc(docUrl, function (res) {
+            result = importRequest(res, importUrl,
+                'application/pdf' ,
+                'pdf',
+                function (data) {
+                response = data;
+            });
+
+             helper.waitFor(function () {
+                var innerTextPad = getinnertext();
+                var test = expect(response.indexOf('\'ok\'')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'imported simple pdf</span>')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'Done with success</span>')).not.to.be(-1);
+
+                return test;
+            }).done(done);
+        });
+    });
+
+    it('import simple odt', function (done) {
+        var importUrl = helper.padChrome$.window.location.href +
+            '/import';
+        var protocol = helper.padChrome$.window.location.protocol;
+        var docUrl = protocol +
+            '//' +
+            helper.padChrome$.window.location.host +
+            '/static/plugins/ep_document_import_hook/static/tests/frontend/doc_test/doc_test.odt';
+        var result;
+        var response;
+        readDoc(docUrl, function (res) {
+            result = importRequest(res,
+                importUrl,
+                'application/vnd.oasis.opendocument.text' ,
+                'odt',
+                function (data) {
+                response = data;
+            });
+
+             helper.waitFor(function () {
+                var innerTextPad = getinnertext();
+                var test = expect(response.indexOf('\'ok\'')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'imported simple odt</span>')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'Done with success</span>')).not.to.be(-1);
+
+                return test;
+            }).done(done);
+        });
+    });
+
+    it('import simple doc', function (done) {
+        var importUrl = helper.padChrome$.window.location.href +
+            '/import';
+        var protocol = helper.padChrome$.window.location.protocol;
+        var docUrl = protocol +
+            '//' +
+            helper.padChrome$.window.location.host +
+            '/static/plugins/ep_document_import_hook/static/tests/frontend/doc_test/doc_test.doc';
+        var result;
+        var response;
+        readDoc(docUrl, function (res) {
+            result = importRequest(res,
+                importUrl,
+                'application/msword' ,
+                'doc',
+                function (data) {
+                response = data;
+            });
+
+             helper.waitFor(function () {
+                var innerTextPad = getinnertext();
+                var test = expect(response.indexOf('\'ok\'')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'importedsimple doc</span>')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'Donewith success</span>')).not.to.be(-1);
+
+                return test;
+            }).done(done);
+        });
+    });
+
+    it('import simple docx', function (done) {
+        var importUrl = helper.padChrome$.window.location.href +
+            '/import';
+        var protocol = helper.padChrome$.window.location.protocol;
+        var docUrl = protocol +
+            '//' +
+            helper.padChrome$.window.location.host +
+            '/static/plugins/ep_document_import_hook/static/tests/frontend/doc_test/doc_test.docx';
+        var result;
+        var response;
+        readDoc(docUrl, function (res) {
+            result = importRequest(res,
+                importUrl,
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ,
+                'docx',
+                function (data) {
+                response = data;
+            });
+
+             helper.waitFor(function () {
+                var innerTextPad = getinnertext();
+                var test = expect(response.indexOf('\'ok\'')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'importedsimple docx</span>')).not.to.be(-1) &&
+                expect(innerTextPad.indexOf('<span class="">' +
+                        'Donewith success</span>')).not.to.be(-1);
+
+                return test;
+            }).done(done);
+        });
     });
 
     it('display import hook message', function (done) {
@@ -117,7 +242,4 @@ describe('Document Import Hook', function () {
         }
         done();
     });
-
-    // TODO
-    // create test for other file formats (.odt, .pdf, .doc, .docx)
 });

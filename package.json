@@ -19,7 +19,7 @@
   "os": [
     "linux"
   ],
-  "_id": "ep_document_import_hook@0.0.1",
+  "_id": "ep_document_import_hook@0.1.0",
   "author": "mrbabbs (Giovanni Esposito) gioesps@gmail.com",
   "repository": {
     "type": "git",

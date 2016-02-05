@@ -29,22 +29,23 @@ exports.import = function (hook_nams, args, cb) {
                 && confs.tool) {
             cmd = confs.tool;
         }
-        apiLogger.debug('Lib cmd : ' + cmd);
+        apiLogger.debug('Tool cmd : ' + cmd);
         /**
          * Check if the file is basic to avoid
-         * using the lib to convert the file.
+         * using the tool to convert the file.
          * ImportHandler.js check if the file is an
          * a supported file, so, is not important
          * check again the other file format
          **/
         if (fileExt === '.html' ||
-                fileExt === '.txt') {
+                fileExt === '.txt' ||
+                fileExt === '.etherpad') {
 
             apiLogger.debug('File has a basic extension[txt, html]: ' +
                         fileExt);
             return cb([]);
         }
-        apiLogger.debug('Use library to convert file');
+        apiLogger.debug('Use the tool to convert file');
 
         tool.convertFile(cmd, args.srcFile,
                 args.destFile,

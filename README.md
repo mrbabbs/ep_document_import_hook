@@ -50,7 +50,7 @@ if you want to use a different command for LibreOffice
 ## TODO
 
 * Add feature to allow using different tool for different file format.
-* Add support to other lenguages for the display message.
+* Add support for other languages for the display message.
 * Check compatibility with OpenOffice.
 * Add support for other platform like Windows and MacOSX.
 * Check compatibility with etherpadlite version < 1.5.7

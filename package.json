@@ -1,6 +1,6 @@
 {
   "name": "ep_document_import_hook",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "The plugin allows an user to import DOC, PDF, ODT, and DOCX file using external tools like LibreOffice",
   "keywords": [
     "import",

@@ -1,4 +1,5 @@
-# Document Import Hook
+
+# [DEPRECATED] Document Import Hook
 
 Gives the possibility to import document like PDF, DOC, and DOCX using
 external tool like LibreOffice.
